@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Propose Day — Again 💍</title>
+  <style>
+    :root{
+      --bg:#fff7fb;
+      --card:#ffffff;
+      --ink:#1b1b1b;
+      --muted:#666;
+      --accent:#ff4d8d;
+      --accent2:#7c4dff;
+      --shadow: 0 18px 45px rgba(0,0,0,.08);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, #ffe3ef 0%, transparent 60%),
+                  radial-gradient(900px 500px at 80% 20%, #e9e2ff 0%, transparent 55%),
+                  var(--bg);
+      color:var(--ink);
+    }
+    header{
+      position:sticky; top:0; z-index:9;
+      backdrop-filter: blur(12px);
+      background: rgba(255,247,251,.72);
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    .wrap{max-width:980px; margin:0 auto; padding:18px 16px}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:14px}
+    .brand{font-weight:800; letter-spacing:.2px}
+    .btn{
+      border:0; padding:10px 14px; border-radius:999px;
+      background:var(--accent); color:#fff; font-weight:700;
+      cursor:pointer; transition: transform .08s ease;
+    }
+    .btn:active{transform: scale(.98)}
+    .btn.secondary{background:#111}
+    .btn.ghost{
+      background: transparent; color: var(--ink);
+      border:1px solid rgba(0,0,0,.12);
+    }
+    .grid{display:grid; gap:16px}
+    .hero{
+      padding:30px 16px 10px;
+    }
+    .heroCard{
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(0,0,0,.06);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      overflow:hidden;
+      position:relative;
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:6px 10px; border-radius:999px;
+      background: rgba(255,77,141,.12);
+      border:1px solid rgba(255,77,141,.25);
+      color: var(--accent);
+      font-weight:800; font-size: 13px;
+    }
+    h1{margin:10px 0 8px; font-size: clamp(28px, 4vw, 44px); line-height:1.05}
+    p{margin:0 0 10px; color:var(--muted); font-size: 16px; line-height:1.6}
+    .two{grid-template-columns: 1.2fr .8fr}
+    @media(max-width:860px){ .two{grid-template-columns:1fr} }
+    .card{
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(0,0,0,.06);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .card h2{margin:0 0 8px; font-size: 20px}
+    .muted{color:var(--muted)}
+    .list{margin:10px 0 0; padding:0; list-style:none; display:grid; gap:10px}
+    .li{
+      padding:12px 12px;
+      background: rgba(0,0,0,.03);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius: 14px;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      padding:2px 6px; border-radius:8px;
+      background: rgba(0,0,0,.06);
+      border:1px solid rgba(0,0,0,.08);
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(0,0,0,.14);
+      background: rgba(255,255,255,.95);
+      outline:none;
+      font-size: 14px;
+    }
+    textarea{min-height:100px; resize:vertical}
+    .small{font-size: 13px}
+    .center{display:flex; justify-content:center; align-items:center}
+    .bigButtons{display:flex; gap:12px; flex-wrap:wrap; margin-top:10px}
+    .yes{background: linear-gradient(90deg, var(--accent), #ff7ab1)}
+    .no{background: linear-gradient(90deg, #111, #333)}
+    .sparkle{
+      position:absolute; inset:-80px -80px auto auto;
+      width:240px; height:240px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(124,77,255,.35), transparent 60%),
+                  radial-gradient(circle at 60% 60%, rgba(255,77,141,.35), transparent 62%);
+      filter: blur(2px);
+      transform: rotate(25deg);
+      pointer-events:none;
+    }
+    .hidden{display:none !important}
+    .gameGrid{
+      display:grid; gap:10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 320px;
+      margin-top: 10px;
+    }
+    .cell{
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      border:1px solid rgba(0,0,0,.12);
+      background: rgba(0,0,0,.03);
+      font-size: 30px;
+      font-weight: 900;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      user-select:none;
+    }
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(17,17,17,.92);
+      color:#fff; padding:10px 14px; border-radius:999px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      opacity:0; pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-4px)}
+    footer{padding:30px 0 50px; color:var(--muted); text-align:center}
+    a{color:var(--accent); text-decoration:none; font-weight:700}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">💗 Propose Day</div>
+      <div class="row">
+        <button class="btn ghost" id="musicBtn">🎵 Music: Off</button>
+        <button class="btn" id="scrollBtn">Go to the Proposal 💍</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="heroCard">
+        <div class="sparkle"></div>
+        <span class="pill">1.5 years • long distance • still choosing you</span>
+        <h1>Hey love…<br/>I want to propose to you <span style="color:var(--accent)">again</span>.</h1>
+        <p>
+          We haven’t met yet — and I won’t pretend it’s easy.  
+          But for 1.5 years, you’ve been my calm, my excitement, and my favorite notification.
+        </p>
+        <p class="small muted">
+          Scroll, read, play a little… and then answer me. ❤️
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap grid two">
+    <section class="card">
+      <h2>📜 A little letter</h2>
+      <p>
+        I don’t love you because it’s convenient.  
+        I love you because even from far away, you feel like home.
+      </p>
+      <ul class="list">
+        <li class="li">When I’m stressed, your words slow my mind down.</li>
+        <li class="li">When I’m happy, you’re the first person I want to tell.</li>
+        <li class="li">When distance feels heavy, you still feel worth it.</li>
+      </ul>
+      <p class="small muted" style="margin-top:12px">
+        I love you, i cheated on you two times but you gave me chance, i left you for no reason but you gave me chance again. You loved me more than i deserve. I dont know what i did to deseve you or get you. Forgive me for everything, all the mistake i did. I will choose you always and not gonna leave you🩷
+        I LOVE YOU MOMMY🩷
+      </p>
+    </section>
+
+    <aside class="card">
+      <h2>🧩 Mini Game 1: “Memory Quiz”</h2>
+      <p class="muted">Answer 2 questions. If you get them right, you unlock a sweet message 😌</p>
+
+      <div class="grid" style="gap:10px; margin-top:10px">
+        <div>
+          <div class="small muted">1) How long have we been together?</div>
+          <input id="q1" placeholder='Type: "1.5 years" or "18 months"' />
+        </div>
+        <div>
+          <div class="small muted">2) What’s my promise to you?</div>
+          <input id="q2" placeholder='Type: "i will love you always" or "You will be loyal"' />
+        </div>
+        <div class="row">
+          <button class="btn secondary" id="quizBtn">Check Answers</button>
+          <span class="small muted" id="quizHint">Hint: keep it simple 😉</span>
+        </div>
+
+        <div class="li hidden" id="quizUnlock">
+          ✅ You unlocked it:
+          <div style="margin-top:6px; font-weight:800; color:var(--ink)">
+            “No matter how far you are, I’ll keep choosing you — gently, consistently, and seriously. Dont give the distance any chance to break us and I wont leave you, dosent matter the distance is and dosent matter how much time it takes to be together🩷”
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card">
+      <h2>🎮 Mini Game 2: Tic-Tac-Toe (You vs Me)</h2>
+      <p class="muted">If you win, you earn a kiss coupon 💋 (redeemable later 😏)</p>
+
+      <div class="center">
+        <div>
+          <div class="gameGrid" id="board"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn ghost" id="resetGame">Reset</button>
+            <span class="small muted" id="gameStatus">Your turn: ❤️</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card" id="proposalCard">
+      <h2>💍 The Proposal</h2>
+      <p>
+        We’re already together… but today I’m asking with my whole heart:
+      </p>
+      <p style="font-weight:900; font-size:18px; color:var(--ink); margin-top:6px">
+        Will you be my WIFEY— again — and keep building this with me?
+      </p>
+      <p class="small muted">PLEASE SAY YESSSS.</p>
+
+      <div class="bigButtons">
+        <button class="btn yes" id="yesBtn">Yes ❤️</button>
+        <button class="btn no" id="timeBtn">I need time 💭</button>
+      </div>
+
+      <div class="li hidden" id="yesMessage" style="margin-top:12px">
+        <div style="font-weight:900; font-size:16px">🥹 You said YES.</div>
+        <div class="muted" style="margin-top:6px">
+          Send me a message below. I’ll read it like a prayer.
+        </div>
+      </div>
+
+      <div class="li hidden" id="timeMessage" style="margin-top:12px">
+        <div style="font-weight:900; font-size:16px">🌙 Take your time.</div>
+        <div class="muted" style="margin-top:6px">
+          I’m not going anywhere. I’d rather you feel safe than rushed.
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <div class="small muted">Send a reply (opens your email app):</div>
+        <textarea id="replyText" placeholder="Type your message here..."></textarea>
+        <div class="row" style="margin-top:10px">
+          <button class="btn" id="sendBtn">Send Reply ✉️</button>
+          <button class="btn ghost" id="copyBtn">Copy Message</button>
+        </div>
+        <p class="small muted" style="margin-top:8px">
+          Tip: edit the email address in the code to YOURS (search for <span class="kbd">fmjawad48@gmail.com</span>).
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="wrap">
+    Made with ❤️ for Propose Day.<br>
+
+  <div class="toast" id="toast">Saved</div>
+
+  <audio id="bgm" loop>
+    <!-- Put a real mp3 link here OR delete music features -->
+    <!-- Example: <source src="your-music.mp3" type="audio/mpeg"> -->
+  </audio>
+
+  <script>
+    // ----- Helpers -----
+    const toast = (msg) => {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(()=> el.classList.remove('show'), 1400);
+    };
+
+    // ----- Scroll -----
+    document.getElementById('scrollBtn').addEventListener('click', ()=>{
+      document.getElementById('proposalCard').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // ----- Music toggle (optional) -----
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    let musicOn = false;
+    musicBtn.addEventListener('click', async ()=>{
+      try{
+        if(!musicOn){
+          await bgm.play();
+          musicOn = true;
+          musicBtn.textContent = "🎵 Music: On";
+          toast("Music on");
+        }else{
+          bgm.pause();
+          musicOn = false;
+          musicBtn.textContent = "🎵 Music: Off";
+          toast("Music off");
+        }
+      }catch(e){
+        toast("Add an mp3 source first");
+      }
+    });
+
+    // ----- Quiz unlock -----
+    document.getElementById('quizBtn').addEventListener('click', ()=>{
+      const a1 = (document.getElementById('q1').value || "").toLowerCase().trim();
+      const a2 = (document.getElementById('q2').value || "").toLowerCase().trim();
+
+      const ok1 = a1.includes("1.5") || a1.includes("1 and half") || a1.includes("18") || a1.includes("one and half");
+      const ok2 = a2.includes("honest") || a2.includes("honesty") || a2.includes("respect") || a2.includes("loyal") || a2.includes("trust");
+
+      if(ok1 && ok2){
+        document.getElementById('quizUnlock').classList.remove('hidden');
+        toast("Unlocked 💖");
+      }else{
+        toast("Try again 😉");
+      }
+    });
+
+    // ----- Tic-tac-toe (player ❤️ vs bot 💙) -----
+    const boardEl = document.getElementById('board');
+    const statusEl = document.getElementById('gameStatus');
+    let board = Array(9).fill("");
+    let gameOver = false;
+
+    const wins = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    function winner(b){
+      for(const [a,c,d] of wins){
+        if(b[a] && b[a]===b[c] && b[a]===b[d]) return b[a];
+      }
+      if(b.every(x=>x)) return "draw";
+      return null;
+    }
+
+    function render(){
+      boardEl.innerHTML = "";
+      board.forEach((val, i)=>{
+        const cell = document.createElement('button');
+        cell.className = "cell";
+        cell.textContent = val;
+        cell.addEventListener('click', ()=> playerMove(i));
+        boardEl.appendChild(cell);
+      });
+    }
+
+    function playerMove(i){
+      if(gameOver) return;
+      if(board[i]) return;
+      board[i] = "❤️";
+      let w = winner(board);
+      if(w){ endGame(w); return; }
+      statusEl.textContent = "My turn: 💙";
+      setTimeout(botMove, 450);
+    }
+
+    function botMove(){
+      if(gameOver) return;
+
+      // simple strategy: win if possible, block if needed, else random
+      const tryLine = (symbol) => {
+        for(const line of wins){
+          const vals = line.map(idx=>board[idx]);
+          const empties = line.filter(idx=>!board[idx]);
+          const count = vals.filter(v=>v===symbol).length;
+          if(count===2 && empties.length===1) return empties[0];
+        }
+        return null;
+      };
+
+      let move = tryLine("💙");
+      if(move===null) move = tryLine("❤️");
+      if(move===null){
+        const empty = board.map((v,i)=>v?null:i).filter(x=>x!==null);
+        move = empty[Math.floor(Math.random()*empty.length)];
+      }
+
+      board[move] = "💙";
+      const w = winner(board);
+      if(w){ endGame(w); return; }
+      statusEl.textContent = "Your turn: ❤️";
+      render();
+    }
+
+    function endGame(w){
+      gameOver = true;
+      render();
+      if(w==="draw"){
+        statusEl.textContent = "It’s a draw 😄 Reset to play again.";
+        toast("Draw!");
+      }else if(w==="❤️"){
+        statusEl.textContent = "You win! 💋 Kiss coupon unlocked.";
+        toast("You win 💋");
+      }else{
+        statusEl.textContent = "I win 😌 But I still choose you.";
+        toast("I win 😌");
+      }
+    }
+
+    document.getElementById('resetGame').addEventListener('click', ()=>{
+      board = Array(9).fill("");
+      gameOver = false;
+      statusEl.textContent = "Your turn: ❤️";
+      render();
+    });
+
+    render();
+
+    // ----- Proposal buttons -----
+    const yesMsg = document.getElementById('yesMessage');
+    const timeMsg = document.getElementById('timeMessage');
+
+    document.getElementById('yesBtn').addEventListener('click', ()=>{
+      yesMsg.classList.remove('hidden');
+      timeMsg.classList.add('hidden');
+      toast("She said YES ❤️");
+    });
+
+    document.getElementById('timeBtn').addEventListener('click', ()=>{
+      timeMsg.classList.remove('hidden');
+      yesMsg.classList.add('hidden');
+      toast("Respecting her pace 💭");
+    });
+
+    // ----- Reply send/copy -----
+    const YOUR_EMAIL = "YOUR_EMAIL_HERE"; // <-- change this
+    document.getElementById('sendBtn').addEventListener('click', ()=>{
+      const msg = document.getElementById('replyText').value.trim() || "(no message)";
+      const subject = encodeURIComponent("My answer 💗");
+      const body = encodeURIComponent(msg);
+      if(YOUR_EMAIL.includes("YOUR_EMAIL_HERE")){
+        toast("Edit the email in code first");
+        return;
+      }
+      window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      const msg = document.getElementById('replyText').value.trim();
+      if(!msg){ toast("Write something first"); return; }
+      try{
+        await navigator.clipboard.writeText(msg);
+        toast("Copied ✅");
+      }catch(e){
+        toast("Copy not allowed here");
+      }
+    });
+  </script>
+</body>
+	</html>
