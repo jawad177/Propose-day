@@ -146,6 +146,14 @@
     .toast.show{opacity:1; transform:translateX(-50%) translateY(-4px)}
     footer{padding:30px 0 50px; color:var(--muted); text-align:center}
     a{color:var(--accent); text-decoration:none; font-weight:700}
+
+    /* BIG 💋 for kiss coupon */
+    .kissBig{
+      font-size: 90px;
+      line-height: 1;
+      text-align: center;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -166,7 +174,7 @@
         <span class="pill">1.5 years • long distance • still choosing you</span>
         <h1>Hey love…<br/>I want to propose to you <span style="color:var(--accent)">again</span>.</h1>
         <p>
-          We haven’t met yet — and I won’t pretend it’s easy.  
+          We haven’t met yet — and I won’t pretend it’s easy.
           But for 1.5 years, you’ve been my calm, my excitement, and my favorite notification.
         </p>
         <p class="small muted">
@@ -180,7 +188,7 @@
     <section class="card">
       <h2>📜 A little letter</h2>
       <p>
-        I don’t love you because it’s convenient.  
+        I don’t love you because it’s convenient.
         I love you because even from far away, you feel like home.
       </p>
       <ul class="list">
@@ -209,7 +217,7 @@
         </div>
         <div class="row">
           <button class="btn secondary" id="quizBtn">Check Answers</button>
-          <span class="small muted" id="quizHint">Hint: keep it simple 😉</span>
+          <span class="small muted hidden" id="quizHint"></span>
         </div>
 
         <div class="li hidden" id="quizUnlock">
@@ -232,6 +240,7 @@
             <button class="btn ghost" id="resetGame">Reset</button>
             <span class="small muted" id="gameStatus">Your turn: ❤️</span>
           </div>
+          <div class="kissBig hidden" id="kissBig">💋</div>
         </div>
       </div>
     </section>
@@ -272,15 +281,13 @@
           <button class="btn" id="sendBtn">Send Reply ✉️</button>
           <button class="btn ghost" id="copyBtn">Copy Message</button>
         </div>
-        <p class="small muted" style="margin-top:8px">
-          Tip: edit the email address in the code to YOURS (search for <span class="kbd">fmjawad48@gmail.com</span>).
-        </p>
       </div>
     </aside>
   </main>
 
   <footer class="wrap">
-    Made with ❤️ for Propose Day.<br>
+    Made with ❤️ for Propose Day.<br/>
+  </footer>
 
   <div class="toast" id="toast">Saved</div>
 
@@ -325,13 +332,27 @@
       }
     });
 
-    // ----- Quiz unlock -----
+    // ----- Quiz unlock (no hint) -----
     document.getElementById('quizBtn').addEventListener('click', ()=>{
       const a1 = (document.getElementById('q1').value || "").toLowerCase().trim();
       const a2 = (document.getElementById('q2').value || "").toLowerCase().trim();
 
-      const ok1 = a1.includes("1.5") || a1.includes("1 and half") || a1.includes("18") || a1.includes("one and half");
-      const ok2 = a2.includes("honest") || a2.includes("honesty") || a2.includes("respect") || a2.includes("loyal") || a2.includes("trust");
+      const ok1 =
+        a1.includes("1.5") ||
+        a1.includes("1 and half") ||
+        a1.includes("one and half") ||
+        a1.includes("18") ||
+        a1.includes("18 months") ||
+        a1.includes("one and a half") ||
+        a1.includes("year and half");
+
+      const ok2 =
+        a2.includes("love you always") ||
+        a2.includes("always love") ||
+        a2.includes("loyal") ||
+        a2.includes("faithful") ||
+        a2.includes("never leave") ||
+        a2.includes("choose you");
 
       if(ok1 && ok2){
         document.getElementById('quizUnlock').classList.remove('hidden');
@@ -380,6 +401,7 @@
       if(w){ endGame(w); return; }
       statusEl.textContent = "My turn: 💙";
       setTimeout(botMove, 450);
+      render();
     }
 
     function botMove(){
@@ -417,7 +439,8 @@
         statusEl.textContent = "It’s a draw 😄 Reset to play again.";
         toast("Draw!");
       }else if(w==="❤️"){
-        statusEl.textContent = "You win! 💋 Kiss coupon unlocked.";
+        statusEl.textContent = "You win! Kiss coupon unlocked.";
+        document.getElementById('kissBig').classList.remove('hidden');
         toast("You win 💋");
       }else{
         statusEl.textContent = "I win 😌 But I still choose you.";
@@ -429,6 +452,7 @@
       board = Array(9).fill("");
       gameOver = false;
       statusEl.textContent = "Your turn: ❤️";
+      document.getElementById('kissBig').classList.add('hidden');
       render();
     });
 
@@ -451,15 +475,11 @@
     });
 
     // ----- Reply send/copy -----
-    const YOUR_EMAIL = "YOUR_EMAIL_HERE"; // <-- change this
+    const YOUR_EMAIL = "fmjawad48@gmail.com";
     document.getElementById('sendBtn').addEventListener('click', ()=>{
       const msg = document.getElementById('replyText').value.trim() || "(no message)";
       const subject = encodeURIComponent("My answer 💗");
       const body = encodeURIComponent(msg);
-      if(YOUR_EMAIL.includes("YOUR_EMAIL_HERE")){
-        toast("Edit the email in code first");
-        return;
-      }
       window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
     });
 
@@ -475,4 +495,4 @@
     });
   </script>
 </body>
-	</html>
+</html>
